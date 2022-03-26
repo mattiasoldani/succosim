@@ -13,7 +13,7 @@ Tested with:
 
 The succosim source code can be downloaded either as a ZIP archive, from the Code drop-down menu [here](https://github.com/mattiasoldani/succosim), or directly from the terminal (open in your project working directory) via
 ```shell
-git clone git://github.com/mattiasoldani/succosim.git
+git clone https://github.com/mattiasoldani/succosim.git
 ```
 Note: the latter requires  [Git](https://git-scm.com/) installed on your machine.
 
