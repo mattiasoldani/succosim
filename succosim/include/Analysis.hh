@@ -9,7 +9,7 @@ using namespace std;
 // select the output data file format here by including the proper header (only 1 at a time)
 // note: CSV format does not support custom file path & name
 // #include <g4csv.hh>
-#include <g4root.hh>
+#include "G4AnalysisManager.hh"
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #endif
