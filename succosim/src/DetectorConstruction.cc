@@ -26,7 +26,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     // define the world and all the setup stuff (materials, volumes) here, or...
 
     // --------------------------------------------------
-    // ...uncomment this line for the test setup (implemented in include/TestMode.cc) 
+    // ...uncomment this line for the test setup (implemented in src/TestMode.cc) 
     G4VPhysicalVolume* worldPhys = SetupTest(nist);
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	
@@ -50,7 +50,7 @@ void DetectorConstruction::ConstructSDandField()
     // create the sensitive detectors and bin them to the logical volumes here, or...
 	
     // --------------------------------------------------
-    // ...uncomment this line for the test sensitive detectors (implemented in include/TestMode.cc)
+    // ...uncomment this line for the test sensitive detectors (implemented in src/TestMode.cc)
     SDTest(sdm);
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }

@@ -2,7 +2,6 @@
 #include "DetectorConstruction.hh"
 #include "Analysis.hh"
 #include "PhysicsList.hh"
-#include "TestMode.cc"
 
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 // add new physics lists here

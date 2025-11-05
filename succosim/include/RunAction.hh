@@ -13,11 +13,11 @@ class RunAction : public G4UserRunAction
 {
 public:
     RunAction();
-    ~RunAction();
-    void EndOfRunAction(const G4Run*);
+    ~RunAction() override = default;
+    void EndOfRunAction(const G4Run*) override;
   
 private:
-    // event-by-event scoring for test simulation (implemented in include/TestMode.cc)
+    // event-by-event scoring for test simulation (implemented in src/TestMode.cc)
     void OutputNtupleTest(G4AnalysisManager* analysis);
 };
 

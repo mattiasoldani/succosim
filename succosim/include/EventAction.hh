@@ -16,7 +16,7 @@ public:
     void EndOfEventAction(const G4Event* event) override;
 	
 private:
-    // event-by-event scoring for test simulation (implemented in include/TestMode.cc)
+    // event-by-event scoring for test simulation (implemented in src/TestMode.cc)
     void EndOfEventScoringTest(const G4Event* event, G4SDManager* sdm, G4HCofThisEvent* hcofEvent, G4AnalysisManager* analysis);
 };
 

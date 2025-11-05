@@ -22,7 +22,7 @@ RunAction::RunAction() :  G4UserRunAction()
     // e.g. analysis->CreateNtupleDColumn("NEvent");
   
     // --------------------------------------------------
-    // ...uncomment this line for the test ntuple columns (implemented in include/TestMode.cc)
+    // ...uncomment this line for the test ntuple columns (implemented in src/TestMode.cc)
     OutputNtupleTest(analysis);
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     analysis->FinishNtuple(0);
@@ -35,19 +35,16 @@ RunAction::RunAction() :  G4UserRunAction()
     analysis->OpenFile("./out_data/"+outFileName+".root");
 }
 
-RunAction::~RunAction()
-{
-    // write output file & close it
-    G4AnalysisManager* analysis = G4AnalysisManager::Instance();
-    analysis->Write();
-    analysis->CloseFile();
-}
-
 void RunAction::EndOfRunAction(const G4Run* run)
 {
     // retrieve the number of events produced in the run
     G4int nofEvents = run->GetNumberOfEvent();
     if (nofEvents == 0) return;
+
+    // write output file & close it
+    G4AnalysisManager* analysis = G4AnalysisManager::Instance();
+    analysis->Write();
+    analysis->CloseFile();
 
     if (IsMaster())
     {

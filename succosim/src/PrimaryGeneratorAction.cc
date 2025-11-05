@@ -19,7 +19,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
     // set the beam features that are constant throughout the run here, or...
 
     // --------------------------------------------------
-    // ...uncomment this line for the test beam (implemented in include/TestMode.cc)
+    // ...uncomment this line for the test beam (implemented in src/TestMode.cc)
     BeamFeaturesFxdTest(fGun);
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }
@@ -34,7 +34,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     // set the beam features that change at each event here, or...
 
     // --------------------------------------------------
-    // ...uncomment this line for the test beam (implemented in include/TestMode.cc)
+    // ...uncomment this line for the test beam (implemented in src/TestMode.cc)
     BeamFeaturesRndTest(fGun);
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	

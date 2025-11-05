@@ -26,7 +26,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
     // implement cast of the data collections, operations on them and ntuple filling here, or... 
 
     // --------------------------------------------------
-    // ...uncomment this line for the test event action (implemented in include/TestMode.cc)
+    // ...uncomment this line for the test event action (implemented in src/TestMode.cc)
     EndOfEventScoringTest(event, sdm, hcofEvent, analysis);
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }
