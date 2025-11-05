@@ -1,21 +1,8 @@
-#ifdef G4MULTITHREADED
-    #include <G4MTRunManager.hh>
-    using RunManager = G4MTRunManager;
-#else
-    #include <G4RunManager.hh>
-    using RunManager = G4RunManager;
-#endif
-
-#ifdef G4VIS_USE
-    #include <G4VisExecutive.hh>
-#endif
-#ifdef G4UI_USE
-    #include <G4UIExecutive.hh>
-#endif
-
-#include <G4String.hh>
-#include <G4UImanager.hh>
-#include <vector>
+#include "ActionInitialization.hh"
+#include "DetectorConstruction.hh"
+#include "Analysis.hh"
+#include "PhysicsList.hh"
+#include "TestMode.cc"
 
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 // add new physics lists here
@@ -23,11 +10,12 @@
 #include <FTFP_BERT.hh>
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#include "ActionInitialization.hh"
-#include "DetectorConstruction.hh"
-#include "Analysis.hh"
-#include "PhysicsList.hh"
-#include "TestMode.cc"
+#include "G4RunManagerFactory.hh"
+#include <G4VisExecutive.hh>
+#include <G4UIExecutive.hh>
+#include <G4String.hh>
+#include <G4UImanager.hh>
+#include <vector>
 
 using namespace std;
 
@@ -40,7 +28,12 @@ int main(int argc, char** argv)
     // find execution type (interactive or not) and detect all the macros given as executable arguments
     vector<G4String> macros;
     bool interactive = false;
-    if  (argc == 1)
+
+    #ifdef G4MULTITHREADED
+    G4int nThreads = 0;
+    #endif
+
+    if (argc == 1)
     {
         interactive = true;
     }
@@ -61,16 +54,22 @@ int main(int argc, char** argv)
         }
     }
 
-	// load run manager
-    auto runManager = new RunManager();
-    runManager->SetVerboseLevel(0);  // <<< set run manager verbosity here
+    // load user interface manager and program executor
+    G4UIExecutive* ui = nullptr;
+    if (interactive)
+    {
+        ui = new G4UIExecutive(argc, argv);
+    }
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
-    // if in graphical mode, start visualisation
-    #ifdef G4VIS_USE
-        G4VisManager* visManager = new G4VisExecutive("Quiet");  // <<< set visualisation manager verbosity here
-        visManager->SetVerboseLevel(0);  // <<< set visualisation manager verbosity here
-        visManager->Initialize();
+    // load run manager
+    auto runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
+    #ifdef G4MULTITHREADED
+    if (nThreads > 0) {
+        runManager->SetNumberOfThreads(nThreads);
+    }
     #endif
+    runManager->SetVerboseLevel(0);  // <<< set run manager verbosity here
 
     // load physics list, detector construction and action initialisation
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -81,15 +80,10 @@ int main(int argc, char** argv)
     runManager->SetUserInitialization(new DetectorConstruction());
     runManager->SetUserInitialization(new ActionInitialization());
 
-    // load user interface manager and program executor
-    #ifdef G4UI_USE
-        G4UIExecutive* ui = nullptr;
-        if (interactive)
-        {
-            ui = new G4UIExecutive(argc, argv);
-        }
-    #endif
-    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+    // if in graphical mode, start visualisation
+    auto visManager = new G4VisExecutive("Quiet");  // <<< set visualisation manager verbosity here
+    visManager->SetVerboseLevel(0);  // <<< set visualisation manager verbosity here
+    visManager->Initialize();
 
     // execute all the macros given as executable arguments
     for (auto macro : macros)
@@ -99,27 +93,26 @@ int main(int argc, char** argv)
     }
 
     // if in interactive mode, open it; moreover, if in graphical mode, execute the default macro(s) for graphical mode startup
-    #ifdef G4UI_USE
-        if (interactive)
+    if (interactive)
+    {
+        if (ui->IsGUI())
         {
-            if (ui->IsGUI())
-            {
-                // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-                // select macro to be executed at graphical mode startup
-                // e.g. UImanager->ApplyCommand("/control/execute macros/gui.mac");
-                UImanager->ApplyCommand("/control/execute macros/gui.mac");
-                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            }
-            else
-            {
-                UImanager->ApplyCommand("/run/initialize");
-            }
-            ui->SessionStart();
-            delete ui;
+            // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            // select macro to be executed at graphical mode startup
+            // e.g. UImanager->ApplyCommand("/control/execute macros/gui.mac");
+            UImanager->ApplyCommand("/control/execute macros/gui.mac");
+            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         }
-    #endif
+        else
+        {
+            UImanager->ApplyCommand("/run/initialize");
+        }
+        ui->SessionStart();
+        delete ui;
+    }
 
-    // at the end of the session, delete the run manager
+    // at the end of the session, delete the graphical and run manager
+    delete visManager;
     delete runManager;
 	
     cout << "-----" << endl;
